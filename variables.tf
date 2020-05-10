@@ -13,3 +13,14 @@ variable "pullSecret" {
 variable "sshPubKey" {
   type = string
 }
+
+variable "minioServer" {
+  type = string
+}
+variable "minioAccessKey" {
+  type = string
+}
+variable "minioSecretKey" {
+  type = string
+}
+
