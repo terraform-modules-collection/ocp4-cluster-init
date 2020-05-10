@@ -21,6 +21,6 @@ platform:
   none: {}
 fips: false
 
-pullSecret: ${pullSecret}
-sshKey: ${sshPubKey}
+pullSecret: '${pullSecret}'
+sshKey: '${sshPubKey}'
 

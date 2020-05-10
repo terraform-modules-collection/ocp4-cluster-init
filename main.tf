@@ -4,7 +4,15 @@ provider "minio" {
   minio_secret_key = var.minioSecretKey
 }
 
-
+data "template_file" "install-config" {
+  template = file("${path.module}/templates/install-config.yaml")
+  vars = {
+    clusterName = var.clusterName
+    pullSecret =  base64decode(var.pullSecret)
+    sshPubKey = base64decode(var.sshPubKey)
+    baseDomain = var.baseDomain
+  }
+}
 locals {
   publicBucketName = "ocp-cluster-${var.clusterName}-public"
   privateBucketName = "ocp-cluster-${var.clusterName}-private"
@@ -25,15 +33,12 @@ resource "null_resource" "init-cluster" {
     command = "${path.module}/scripts/init-cluster.sh"
     environment = {
         WORKDIR = "${path.module}/init-cluster/${var.clusterName}"
-        CLUSTER_NAME = var.clusterName
-        PULL_SECRET_B64 = var.pullSecret
-        SSH_PUB_KEY_B64 = var.sshPubKey
-        BASE_DOMAIN = var.baseDomain
-        PUBLIC_BACKET_NAME = minio_s3_bucket.public-bucket.id
-        PRIVATE_BACKET_NAME = minio_s3_bucket.private-bucket.id
+        PUBLIC_BUCKET_NAME = minio_s3_bucket.public-bucket.id
+        PRIVATE_BUCKET_NAME = minio_s3_bucket.private-bucket.id
         MINIO_SERVER = var.minioServer
         MINIO_ACCESS_KEY = var.minioAccessKey
         MINIO_SECRET_KEY = var.minioSecretKey
+        INSTALL_CONFIG =  base64encode(data.template_file.install-config.rendered)
     }
   }
 }
