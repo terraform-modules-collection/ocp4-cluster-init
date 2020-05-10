@@ -1,20 +1,9 @@
-provider "aws" {
-  region = "us-east-1"
-}
-
 provider "minio" {
   minio_server = var.minioServer
   minio_access_key = var.minioAccessKey
   minio_secret_key = var.minioSecretKey
 }
 
-terraform {
-  backend "s3" {
-    bucket = "tf-states-s3"
-    key    = "cluster-init"
-    region = "us-east-1"
-  }
-}
 
 locals {
   publicBucketName = "ocp-cluster-${var.clusterName}-public"
@@ -49,13 +38,3 @@ resource "null_resource" "init-cluster" {
   }
 }
 
-output "workerIgnUrl" {
-  value = "http://${var.minioServer}/${minio_s3_bucket.public-bucket.id}/worker.ign"
-}
-output "masterIgnUrl" {
-  value = "http://${var.minioServer}/${minio_s3_bucket.public-bucket.id}/master.ign"
-}
-
-output "bootstrapIgnUrl" {
-  value = "http://${var.minioServer}/${minio_s3_bucket.public-bucket.id}/bootstrap.ign"
-}
