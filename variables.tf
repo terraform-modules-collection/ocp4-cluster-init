@@ -31,3 +31,7 @@ variable "minioSecretKey" {
   description = "S3 secret key"
 }
 
+variable "minioServerScheme" {
+  type = string
+  default = "http"
+}

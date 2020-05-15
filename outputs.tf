@@ -8,3 +8,11 @@ output "masterIgnUrl" {
 output "bootstrapIgnUrl" {
   value = "http://${var.minioServer}/${minio_s3_bucket.public-bucket.id}/bootstrap.ign"
 }
+
+output "publicBucketName" {
+  value = local.publicBucketName
+}
+
+output "privateBucketName" {
+  value = local.privateBucketName
+}
